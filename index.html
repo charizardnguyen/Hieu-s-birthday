@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Bỏ referrer để vượt qua tường lửa chặn hotlink của các máy chủ ảnh -->
+  <meta name="referrer" content="no-referrer" />
   <title>Mừng Sinh Nhật Trần Trung Hiếu ⚔️</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,9 +23,11 @@
     }
 
     body {
-      /* Hình nền Yu-Gi-Oh Master Duel Arena Full HD có lớp phủ lọc màu */
-      background: linear-gradient(180deg, rgba(8, 3, 18, 0.84) 0%, rgba(14, 6, 30, 0.88) 100%),
-                  url('https://images.alphacoders.com/131/1316654.jpeg') center center / cover no-repeat fixed;
+      /* Ưu tiên file bg.jpg bạn tải lên GitHub, dự phòng bằng ảnh sàn đấu Yu-Gi-Oh Master Duel chính thức */
+      background: linear-gradient(180deg, rgba(10, 4, 22, 0.82) 0%, rgba(16, 7, 34, 0.88) 100%),
+                  url('bg.jpg'),
+                  url('https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1449850/capsule_616x353.jpg') center center / cover no-repeat fixed;
+      background-size: cover;
       color: #fff;
       min-height: 100vh;
       display: flex;
@@ -33,7 +37,25 @@
       position: relative;
     }
 
-    /* Hiệu ứng hạt bụi ma pháp */
+    /* Ma Đạo Trận (Dark Magical Circle) xoay chậm ở nền */
+    .magical-circle-bg {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 550px;
+      height: 550px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      opacity: 0.18;
+      z-index: 0;
+      animation: rotateCircle 60s linear infinite;
+    }
+
+    @keyframes rotateCircle {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
     .bg-runes {
       position: fixed;
       top: 0;
@@ -55,7 +77,6 @@
       100% { opacity: 0.45; }
     }
 
-    /* Nút BGM góc phải */
     .music-toggle {
       position: fixed;
       top: 16px;
@@ -98,7 +119,7 @@
       margin-bottom: 22px;
     }
 
-    /* Huy hiệu Con Mắt Ngàn Năm (Millennium Eye) */
+    /* Con Mắt Ngàn Năm (Millennium Eye) */
     .millennium-badge {
       width: 100px;
       height: 100px;
@@ -164,7 +185,7 @@
 
     .card-box {
       width: 100%;
-      background: rgba(24, 11, 41, 0.75);
+      background: rgba(24, 11, 41, 0.78);
       border: 1.5px solid rgba(255, 215, 0, 0.35);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
@@ -241,7 +262,7 @@
       padding: 0 8px;
     }
 
-    /* Modal hiển thị lật bài 3D */
+    /* Modal hiển thị lật bài */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -409,9 +430,18 @@
 </head>
 <body>
 
+  <!-- Vòng tròn Ma Đạo Trận xoay nền -->
+  <svg class="magical-circle-bg" viewBox="0 0 200 200" fill="none" stroke="#ffd700" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="95" stroke-width="1.5"/>
+    <circle cx="100" cy="100" r="85" stroke-width="1"/>
+    <polygon points="100,5 182,147 18,147" stroke-width="1" fill="none"/>
+    <polygon points="100,195 18,53 182,53" stroke-width="1" fill="none"/>
+    <circle cx="100" cy="100" r="55" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <circle cx="100" cy="100" r="30" stroke-width="1"/>
+  </svg>
+
   <div class="bg-runes"></div>
 
-  <!-- Nút Bật/Tắt Nhạc Nền -->
   <button class="music-toggle" id="musicBtn" onclick="toggleBGM()">
     <span id="musicIcon">🎵</span> <span id="musicText">Nhạc Trận Đấu</span>
   </button>
@@ -420,7 +450,7 @@
 
   <div class="container">
     <div class="header">
-      <!-- Con Mắt Ngàn Năm (Millennium Eye) SVG chuẩn tỉ lệ Anime -->
+      <!-- Con Mắt Ngàn Năm -->
       <div class="millennium-badge">
         <svg class="millennium-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -429,22 +459,13 @@
               <stop offset="40%" stop-color="#ffd700"/>
               <stop offset="100%" stop-color="#d49b14"/>
             </linearGradient>
-            <radialGradient id="pupil" cx="50%" cy="50%" r="50%">
-              <stop offset="40%" stop-color="#140628"/>
-              <stop offset="100%" stop-color="#ffd700"/>
-            </radialGradient>
           </defs>
-          <!-- Lông mày cong trên -->
           <path d="M 18 30 Q 50 18 82 30" stroke="url(#gold)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
-          <!-- Vành mắt trên & dưới -->
           <path d="M 15 48 Q 50 24 85 48" stroke="url(#gold)" stroke-width="5" stroke-linecap="round" fill="none"/>
           <path d="M 15 48 Q 50 72 85 48" stroke="url(#gold)" stroke-width="5" stroke-linecap="round" fill="none"/>
-          <!-- Con ngươi trung tâm -->
           <circle cx="50" cy="48" r="10" fill="url(#gold)"/>
           <circle cx="50" cy="48" r="5" fill="#180b2b"/>
-          <!-- Vệt xoắn ốc bên trái phía dưới -->
           <path d="M 36 62 Q 22 76 34 83 Q 44 86 42 75 Q 40 68 35 68" stroke="url(#gold)" stroke-width="4" stroke-linecap="round" fill="none"/>
-          <!-- Cột nhọn bên phải phía dưới -->
           <path d="M 64 62 L 64 86" stroke="url(#gold)" stroke-width="4.5" stroke-linecap="round"/>
         </svg>
       </div>
@@ -454,7 +475,6 @@
       <p class="sub-title">Trò Chơi Ngàn Năm đã điểm giờ. <span class="highlight-rule">Lá bài bạn rút được hôm nay chính là món quà thật</span> bạn sẽ nhận được ngoài đời!</p>
     </div>
 
-    <!-- Hộp quà: Rút thẻ bài quà tặng -->
     <div class="card-box">
       <div class="box-icon">🎁</div>
       <h2 class="box-title">Rút Thẻ Bài Quà Tặng</h2>
@@ -464,7 +484,6 @@
       </button>
     </div>
 
-    <!-- Hộp bói vui: Ma Pháp / Bẫy -->
     <div class="card-box">
       <div class="box-icon">📜</div>
       <h2 class="box-title">Gieo Quẻ Vận Mệnh</h2>
@@ -479,7 +498,6 @@
     </div>
   </div>
 
-  <!-- Modal lật bài 3D -->
   <div class="modal-overlay" id="cardModal">
     <div class="ygo-modal">
       <div class="flip-hint" id="flipHint">👉 Chạm vào lá bài để LẬT MẶT! 👈</div>
@@ -509,9 +527,6 @@
   </div>
 
   <script>
-    /* ============================================================
-       DANH SÁCH LÁ BÀI QUÀ TẶNG (Sẽ cập nhật ngay khi bạn gửi danh sách)
-       ============================================================ */
     const birthdayGiftCards = [
       {
         name: "Blue-Eyes White Dragon",
