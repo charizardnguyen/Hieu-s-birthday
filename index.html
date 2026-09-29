@@ -21,42 +21,19 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 20%, #2e124d 0%, #110724 60%, #06020c 100%);
+      /* Hình nền Yu-Gi-Oh Master Duel Arena Full HD có lớp phủ lọc màu */
+      background: linear-gradient(180deg, rgba(8, 3, 18, 0.84) 0%, rgba(14, 6, 30, 0.88) 100%),
+                  url('https://images.alphacoders.com/131/1316654.jpeg') center center / cover no-repeat fixed;
       color: #fff;
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      padding: 20px 16px 40px;
+      padding: 20px 16px 42px;
       overflow-x: hidden;
       position: relative;
     }
 
-    .music-toggle {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: rgba(30, 17, 51, 0.85);
-      border: 1.5px solid #ffd700;
-      color: #ffd700;
-      padding: 8px 14px;
-      border-radius: 99px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      z-index: 50;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-      transition: all 0.2s ease;
-    }
-
-    .music-toggle.playing {
-      background: #ffd700;
-      color: #2b124c;
-      box-shadow: 0 0 16px rgba(255, 215, 0, 0.7);
-    }
-
+    /* Hiệu ứng hạt bụi ma pháp */
     .bg-runes {
       position: fixed;
       top: 0;
@@ -64,10 +41,9 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      background: radial-gradient(2px 2px at 40px 60px, #ffd700, transparent),
-                  radial-gradient(2px 2px at 120px 200px, #d4af37, transparent),
-                  radial-gradient(3px 3px at 280px 140px, #ffae00, transparent),
-                  radial-gradient(2px 2px at 200px 360px, #ffffff, transparent);
+      background: radial-gradient(2px 2px at 30px 40px, #ffd700, transparent),
+                  radial-gradient(2px 2px at 150px 220px, #d4af37, transparent),
+                  radial-gradient(3px 3px at 290px 130px, #ffae00, transparent);
       background-repeat: repeat;
       background-size: 320px 320px;
       opacity: 0.35;
@@ -79,6 +55,34 @@
       100% { opacity: 0.45; }
     }
 
+    /* Nút BGM góc phải */
+    .music-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: rgba(22, 10, 38, 0.88);
+      border: 1.5px solid #ffd700;
+      color: #ffd700;
+      padding: 8px 14px;
+      border-radius: 99px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 50;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .music-toggle.playing {
+      background: #ffd700;
+      color: #2b124c;
+      box-shadow: 0 0 16px rgba(255, 215, 0, 0.8);
+    }
+
     .container {
       max-width: 430px;
       width: 100%;
@@ -86,7 +90,7 @@
       flex-direction: column;
       align-items: center;
       z-index: 1;
-      margin-top: 26px;
+      margin-top: 28px;
     }
 
     .header {
@@ -94,29 +98,34 @@
       margin-bottom: 22px;
     }
 
-    .puzzle-badge {
-      width: 90px;
-      height: 90px;
+    /* Huy hiệu Con Mắt Ngàn Năm (Millennium Eye) */
+    .millennium-badge {
+      width: 100px;
+      height: 100px;
       margin: 0 auto 12px;
-      background: radial-gradient(circle, #ffe066 10%, #d4af37 60%, #7a5800 100%);
+      background: radial-gradient(circle, #2d184a 30%, #150926 80%, #0c0417 100%);
       border-radius: 50%;
-      box-shadow: 0 0 35px rgba(255, 215, 0, 0.65), 0 0 70px rgba(255, 174, 0, 0.3);
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 215, 0, 0.4);
+      border: 2.5px solid #ffd700;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 44px;
-      border: 3px solid #fff5cc;
-      animation: floatItem 3.5s ease-in-out infinite;
+      animation: floatEye 4s ease-in-out infinite;
     }
 
-    @keyframes floatItem {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(3deg); }
+    @keyframes floatEye {
+      0%, 100% { transform: translateY(0); filter: drop-shadow(0 0 15px rgba(255,215,0,0.5)); }
+      50% { transform: translateY(-7px); filter: drop-shadow(0 0 25px rgba(255,215,0,0.8)); }
+    }
+
+    .millennium-svg {
+      width: 72px;
+      height: 72px;
     }
 
     .player-tag {
       display: inline-block;
-      background: rgba(255, 215, 0, 0.15);
+      background: rgba(255, 215, 0, 0.12);
       border: 1px solid #ffd700;
       color: #ffd700;
       font-size: 0.78rem;
@@ -126,6 +135,7 @@
       letter-spacing: 1px;
       margin-bottom: 8px;
       text-transform: uppercase;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
     }
 
     .main-title {
@@ -154,21 +164,21 @@
 
     .card-box {
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 215, 0, 0.28);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(24, 11, 41, 0.75);
+      border: 1.5px solid rgba(255, 215, 0, 0.35);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-radius: 22px;
       padding: 22px 18px;
       margin-bottom: 18px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65);
       transition: transform 0.2s ease, border-color 0.2s ease;
     }
 
     .card-box:hover {
       transform: translateY(-2px);
-      border-color: rgba(255, 215, 0, 0.55);
+      border-color: rgba(255, 215, 0, 0.7);
     }
 
     .box-icon {
@@ -231,15 +241,15 @@
       padding: 0 8px;
     }
 
-    /* Modal hiển thị lật thẻ 3D */
+    /* Modal hiển thị lật bài 3D */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(6, 2, 14, 0.92);
-      backdrop-filter: blur(12px);
+      background: rgba(6, 2, 14, 0.94);
+      backdrop-filter: blur(14px);
       display: none;
       justify-content: center;
       align-items: center;
@@ -410,13 +420,41 @@
 
   <div class="container">
     <div class="header">
-      <div class="puzzle-badge">👁️</div>
+      <!-- Con Mắt Ngàn Năm (Millennium Eye) SVG chuẩn tỉ lệ Anime -->
+      <div class="millennium-badge">
+        <svg class="millennium-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fff6bd"/>
+              <stop offset="40%" stop-color="#ffd700"/>
+              <stop offset="100%" stop-color="#d49b14"/>
+            </linearGradient>
+            <radialGradient id="pupil" cx="50%" cy="50%" r="50%">
+              <stop offset="40%" stop-color="#140628"/>
+              <stop offset="100%" stop-color="#ffd700"/>
+            </radialGradient>
+          </defs>
+          <!-- Lông mày cong trên -->
+          <path d="M 18 30 Q 50 18 82 30" stroke="url(#gold)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+          <!-- Vành mắt trên & dưới -->
+          <path d="M 15 48 Q 50 24 85 48" stroke="url(#gold)" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <path d="M 15 48 Q 50 72 85 48" stroke="url(#gold)" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <!-- Con ngươi trung tâm -->
+          <circle cx="50" cy="48" r="10" fill="url(#gold)"/>
+          <circle cx="50" cy="48" r="5" fill="#180b2b"/>
+          <!-- Vệt xoắn ốc bên trái phía dưới -->
+          <path d="M 36 62 Q 22 76 34 83 Q 44 86 42 75 Q 40 68 35 68" stroke="url(#gold)" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <!-- Cột nhọn bên phải phía dưới -->
+          <path d="M 64 62 L 64 86" stroke="url(#gold)" stroke-width="4.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+
       <div class="player-tag">Duelist: Trần Trung Hiếu</div>
       <h1 class="main-title">DRAW PHASE: SINH NHẬT!</h1>
       <p class="sub-title">Trò Chơi Ngàn Năm đã điểm giờ. <span class="highlight-rule">Lá bài bạn rút được hôm nay chính là món quà thật</span> bạn sẽ nhận được ngoài đời!</p>
     </div>
 
-    <!-- Hộp quà chính: Rút lá bài quà tặng -->
+    <!-- Hộp quà: Rút thẻ bài quà tặng -->
     <div class="card-box">
       <div class="box-icon">🎁</div>
       <h2 class="box-title">Rút Thẻ Bài Quà Tặng</h2>
@@ -426,7 +464,7 @@
       </button>
     </div>
 
-    <!-- Hộp phụ: Rút quẻ vận mệnh tuổi mới -->
+    <!-- Hộp bói vui: Ma Pháp / Bẫy -->
     <div class="card-box">
       <div class="box-icon">📜</div>
       <h2 class="box-title">Gieo Quẻ Vận Mệnh</h2>
@@ -472,7 +510,7 @@
 
   <script>
     /* ============================================================
-       DANH SÁCH LÁ BÀI QUÀ TẶNG (Tớ sẽ điền ảnh & chi tiết khi bạn gửi danh sách)
+       DANH SÁCH LÁ BÀI QUÀ TẶNG (Sẽ cập nhật ngay khi bạn gửi danh sách)
        ============================================================ */
     const birthdayGiftCards = [
       {
@@ -498,7 +536,6 @@
       }
     ];
 
-    // Danh sách thẻ phụ (Quẻ may mắn)
     const spellTrapCards = [
       {
         name: "Pot of Greed (Hũ Tham Lam)",
@@ -523,7 +560,6 @@
       }
     ];
 
-    // Âm thanh
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playDrawSfx() {
       if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -555,7 +591,6 @@
       osc.stop(audioCtx.currentTime + 0.35);
     }
 
-    // BGM
     const bgm = document.getElementById('bgmAudio');
     const musicBtn = document.getElementById('musicBtn');
     let isPlaying = false;
