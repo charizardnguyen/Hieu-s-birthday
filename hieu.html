@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mừng Sinh Nhật Trần Trung Hiếu ⚔️</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 20%, #2e124d 0%, #110724 60%, #06020c 100%);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px 16px 40px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .music-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: rgba(30, 17, 51, 0.85);
+      border: 1.5px solid #ffd700;
+      color: #ffd700;
+      padding: 8px 14px;
+      border-radius: 99px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 50;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      transition: all 0.2s ease;
+    }
+
+    .music-toggle.playing {
+      background: #ffd700;
+      color: #2b124c;
+      box-shadow: 0 0 16px rgba(255, 215, 0, 0.7);
+    }
+
+    .bg-runes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(2px 2px at 40px 60px, #ffd700, transparent),
+                  radial-gradient(2px 2px at 120px 200px, #d4af37, transparent),
+                  radial-gradient(3px 3px at 280px 140px, #ffae00, transparent),
+                  radial-gradient(2px 2px at 200px 360px, #ffffff, transparent);
+      background-repeat: repeat;
+      background-size: 320px 320px;
+      opacity: 0.35;
+      animation: pulseGlow 4s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { opacity: 0.2; }
+      100% { opacity: 0.45; }
+    }
+
+    .container {
+      max-width: 430px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      margin-top: 26px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .puzzle-badge {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 12px;
+      background: radial-gradient(circle, #ffe066 10%, #d4af37 60%, #7a5800 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.65), 0 0 70px rgba(255, 174, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      border: 3px solid #fff5cc;
+      animation: floatItem 3.5s ease-in-out infinite;
+    }
+
+    @keyframes floatItem {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+    }
+
+    .player-tag {
+      display: inline-block;
+      background: rgba(255, 215, 0, 0.15);
+      border: 1px solid #ffd700;
+      color: #ffd700;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 99px;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .main-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.85rem;
+      font-weight: 900;
+      color: #ffd700;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.8),
+                   0 0 24px rgba(230, 126, 34, 0.7);
+      letter-spacing: 1px;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .sub-title {
+      font-size: 0.9rem;
+      color: #edd9ff;
+      line-height: 1.45;
+      padding: 0 6px;
+    }
+
+    .highlight-rule {
+      color: #ffd700;
+      font-weight: 700;
+    }
+
+    .card-box {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 215, 0, 0.28);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 22px;
+      padding: 22px 18px;
+      margin-bottom: 18px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card-box:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 215, 0, 0.55);
+    }
+
+    .box-icon {
+      font-size: 40px;
+      margin-bottom: 6px;
+    }
+
+    .box-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffeb99;
+      margin-bottom: 6px;
+    }
+
+    .box-desc {
+      font-size: 0.88rem;
+      color: #d6c6fa;
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 13px 0;
+      border: none;
+      border-radius: 99px;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-gold {
+      background: linear-gradient(90deg, #d4af37 0%, #ffd700 50%, #d4af37 100%);
+      color: #2e1c00;
+      box-shadow: 0 4px 18px rgba(255, 215, 0, 0.45);
+    }
+
+    .btn-spell {
+      background: linear-gradient(90deg, #10b981 0%, #06b6d4 50%, #3b82f6 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 18px rgba(6, 182, 212, 0.4);
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 0.84rem;
+      color: #bca6ea;
+      margin-top: 8px;
+      line-height: 1.45;
+      padding: 0 8px;
+    }
+
+    /* Modal hiển thị lật thẻ 3D */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(6, 2, 14, 0.92);
+      backdrop-filter: blur(12px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .ygo-modal {
+      background: #180d2b;
+      border: 2px solid #ffd700;
+      border-radius: 20px;
+      padding: 22px 18px;
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.35);
+      animation: popZoom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popZoom {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .card-flipper-container {
+      perspective: 1000px;
+      width: 175px;
+      height: 255px;
+      margin: 0 auto 12px;
+      cursor: pointer;
+    }
+
+    .card-flipper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .card-flipper.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      backface-visibility: hidden;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #ffea80;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.8);
+    }
+
+    .card-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-face.front {
+      transform: rotateY(180deg);
+    }
+
+    .card-face.back {
+      transform: rotateY(0deg);
+    }
+
+    .flip-hint {
+      font-size: 0.8rem;
+      color: #ffd700;
+      margin-bottom: 8px;
+      animation: pulseText 1.5s infinite;
+    }
+
+    @keyframes pulseText {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .card-details {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease 0.4s;
+    }
+
+    .card-details.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .gift-badge {
+      display: inline-block;
+      background: #ef4444;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 99px;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .modal-card-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      color: #ffd700;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .modal-card-type {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #bfa5ff;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .modal-card-desc {
+      font-size: 0.86rem;
+      color: #f1e9ff;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 10px;
+      padding: 10px 12px;
+      line-height: 1.45;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .modal-card-stats {
+      font-weight: 800;
+      color: #ffd700;
+      font-size: 0.82rem;
+      text-align: right;
+      margin-top: 6px;
+    }
+
+    .modal-btn {
+      background: linear-gradient(90deg, #ffd700, #f59e0b);
+      color: #3b1e00;
+      border: none;
+      font-weight: 800;
+      padding: 10px 28px;
+      border-radius: 99px;
+      cursor: pointer;
+      font-size: 0.92rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-runes"></div>
+
+  <!-- Nút Bật/Tắt Nhạc Nền -->
+  <button class="music-toggle" id="musicBtn" onclick="toggleBGM()">
+    <span id="musicIcon">🎵</span> <span id="musicText">Nhạc Trận Đấu</span>
+  </button>
+
+  <audio id="bgmAudio" loop src="https://ia801503.us.archive.org/15/items/yu-gi-oh-passionate-duelist/Yu-Gi-Oh!%20-%20Passionate%20Duelist.mp3"></audio>
+
+  <div class="container">
+    <div class="header">
+      <div class="puzzle-badge">👁️</div>
+      <div class="player-tag">Duelist: Trần Trung Hiếu</div>
+      <h1 class="main-title">DRAW PHASE: SINH NHẬT!</h1>
+      <p class="sub-title">Trò Chơi Ngàn Năm đã điểm giờ. <span class="highlight-rule">Lá bài bạn rút được hôm nay chính là món quà thật</span> bạn sẽ nhận được ngoài đời!</p>
+    </div>
+
+    <!-- Hộp quà chính: Rút lá bài quà tặng -->
+    <div class="card-box">
+      <div class="box-icon">🎁</div>
+      <h2 class="box-title">Rút Thẻ Bài Quà Tặng</h2>
+      <p class="box-desc">Tập trung năng lượng, đặt tay lên bộ bài và triệu hồi phần quà sinh nhật thực tế của bạn!</p>
+      <button class="btn btn-gold" onclick="drawGiftCard()">
+        <span>⚡</span> DRAW! NHẬN QUÀ SINH NHẬT <span>⚔️</span>
+      </button>
+    </div>
+
+    <!-- Hộp phụ: Rút quẻ vận mệnh tuổi mới -->
+    <div class="card-box">
+      <div class="box-icon">📜</div>
+      <h2 class="box-title">Gieo Quẻ Vận Mệnh</h2>
+      <p class="box-desc">Kích hoạt bài Phép/Bẫy xem tuổi mới bạn 'bón hành' cho đời hay 'ăn hành'!</p>
+      <button class="btn btn-spell" onclick="drawSpellTrap()">
+        <span>✨</span> KÍCH HOẠT HIỆU ỨNG <span>🔮</span>
+      </button>
+    </div>
+
+    <div class="footer">
+      Chúc Trần Trung Hiếu tuổi mới trăm trận trăm thắng, tay luôn rút được card đỉnh và niềm tin bất diệt! 🔥
+    </div>
+  </div>
+
+  <!-- Modal lật bài 3D -->
+  <div class="modal-overlay" id="cardModal">
+    <div class="ygo-modal">
+      <div class="flip-hint" id="flipHint">👉 Chạm vào lá bài để LẬT MẶT! 👈</div>
+
+      <div class="card-flipper-container" onclick="revealCard()">
+        <div class="card-flipper" id="cardFlipper">
+          <div class="card-face back">
+            <img src="https://images.ygoprodeck.com/images/cards/back.jpg" alt="Mặt úp Yu-Gi-Oh">
+          </div>
+          <div class="card-face front">
+            <img id="cardImage" src="" alt="Lá bài hiển thị">
+          </div>
+        </div>
+      </div>
+
+      <div class="card-details" id="cardDetails">
+        <div class="gift-badge" id="giftBadge" style="display: none;">🎁 QUÀ SINH NHẬT CỦA BẠN 🎁</div>
+        <h3 class="modal-card-name" id="cardName">Tên Lá Bài</h3>
+        <div class="modal-card-type" id="cardType">[ Loại Lá Bài ]</div>
+        <div class="modal-card-desc">
+          <div id="cardEffect">Hiệu ứng lá bài</div>
+          <div class="modal-card-stats" id="cardStats"></div>
+        </div>
+        <button class="modal-btn" onclick="closeModal()">Chốt Nhận Thẻ Này 👌</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ============================================================
+       DANH SÁCH LÁ BÀI QUÀ TẶNG (Tớ sẽ điền ảnh & chi tiết khi bạn gửi danh sách)
+       ============================================================ */
+    const birthdayGiftCards = [
+      {
+        name: "Blue-Eyes White Dragon",
+        type: "[ Dragon / Normal ]",
+        image: "https://images.ygoprodeck.com/images/cards/89631139.jpg",
+        effect: "🎉 CHÚC MỪNG HIẾU ĐÃ RÚT TRÚNG LÁ BÀI NÀY!\n\nLá bài huyền thoại này sẽ được gửi trực tiếp tận tay bạn. Chúc bạn tuổi mới sức mạnh và sự tự tin x3000 lần!",
+        stats: "ATK/ 3000  DEF/ 2500"
+      },
+      {
+        name: "Dark Magician",
+        type: "[ Spellcaster / Normal ]",
+        image: "https://images.ygoprodeck.com/images/cards/46986414.jpg",
+        effect: "🎉 PHẦN QUÀ ĐÃ ĐƯỢC XÁC NHẬN!\n\nPhù Thủy Áo Đen sẽ gia nhập deck của Hiếu ngoài đời thực. Tuổi mới dùng ma pháp này để hốt trọn thành công nhé!",
+        stats: "ATK/ 2500  DEF/ 2100"
+      },
+      {
+        name: "Red-Eyes Black Dragon",
+        type: "[ Dragon / Normal ]",
+        image: "https://images.ygoprodeck.com/images/cards/74677422.jpg",
+        effect: "🎉 BẠN ĐÃ RÚT TRÚNG RỒNG ĐEN MẮT ĐỎ!\n\nLá bài mang tiềm năng bứt phá này sẽ là món quà của Hiếu hôm nay. Chuẩn bị nhận hàng nhé bạn hiền!",
+        stats: "ATK/ 2400  DEF/ 2000"
+      }
+    ];
+
+    // Danh sách thẻ phụ (Quẻ may mắn)
+    const spellTrapCards = [
+      {
+        name: "Pot of Greed (Hũ Tham Lam)",
+        type: "[ Spell Card ]",
+        image: "https://images.ygoprodeck.com/images/cards/55144522.jpg",
+        effect: "Rút ngay 2 chầu ăn uống thả ga không lo về giá do bạn bè bao trọn gói!",
+        stats: "SPELL / NORMAL"
+      },
+      {
+        name: "Raigeki (Sấm Sét)",
+        type: "[ Spell Card ]",
+        image: "https://images.ygoprodeck.com/images/cards/12580477.jpg",
+        effect: "Giáng sét đánh tan toàn bộ deadline và vận xui của Hiếu trong tuổi mới.",
+        stats: "SPELL / NORMAL"
+      },
+      {
+        name: "Monster Reborn (Hồi Sinh)",
+        type: "[ Spell Card ]",
+        image: "https://images.ygoprodeck.com/images/cards/83764718.jpg",
+        effect: "Hồi phục tức thì năng lượng chiến đấu, thức khuya cày bài/cày game mà sáng dậy vẫn tỉnh bơ!",
+        stats: "SPELL / NORMAL"
+      }
+    ];
+
+    // Âm thanh
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playDrawSfx() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.2);
+    }
+
+    function playFlipSfx() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.25);
+      gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.35);
+    }
+
+    // BGM
+    const bgm = document.getElementById('bgmAudio');
+    const musicBtn = document.getElementById('musicBtn');
+    let isPlaying = false;
+
+    function toggleBGM() {
+      if (!isPlaying) {
+        bgm.play().then(() => {
+          isPlaying = true;
+          musicBtn.classList.add('playing');
+          document.getElementById('musicText').innerText = "Đang Phát ⚔️";
+        }).catch(() => {});
+      } else {
+        bgm.pause();
+        isPlaying = false;
+        musicBtn.classList.remove('playing');
+        document.getElementById('musicText').innerText = "Nhạc Trận Đấu";
+      }
+    }
+
+    let isCardFlipped = false;
+
+    function drawGiftCard() {
+      playDrawSfx();
+      const card = birthdayGiftCards[Math.floor(Math.random() * birthdayGiftCards.length)];
+      setupModalCard(card, true);
+    }
+
+    function drawSpellTrap() {
+      playDrawSfx();
+      const card = spellTrapCards[Math.floor(Math.random() * spellTrapCards.length)];
+      setupModalCard(card, false);
+    }
+
+    function setupModalCard(card, isGift) {
+      isCardFlipped = false;
+      const flipper = document.getElementById('cardFlipper');
+      const details = document.getElementById('cardDetails');
+      const hint = document.getElementById('flipHint');
+      const badge = document.getElementById('giftBadge');
+
+      flipper.classList.remove('flipped');
+      details.classList.remove('visible');
+      hint.style.display = 'block';
+      badge.style.display = isGift ? 'inline-block' : 'none';
+
+      document.getElementById('cardImage').src = card.image;
+      document.getElementById('cardName').innerText = card.name;
+      document.getElementById('cardType').innerText = card.type;
+      document.getElementById('cardEffect').innerText = card.effect;
+      document.getElementById('cardStats').innerText = card.stats;
+
+      document.getElementById('cardModal').style.display = 'flex';
+
+      setTimeout(() => {
+        if (!isCardFlipped) revealCard();
+      }, 650);
+    }
+
+    function revealCard() {
+      if (isCardFlipped) return;
+      isCardFlipped = true;
+      playFlipSfx();
+
+      document.getElementById('cardFlipper').classList.add('flipped');
+      document.getElementById('flipHint').style.display = 'none';
+      document.getElementById('cardDetails').classList.add('visible');
+
+      confetti({
+        particleCount: 100,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#ffd700', '#f59e0b', '#a855f7', '#06b6d4', '#ef4444']
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('cardModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
