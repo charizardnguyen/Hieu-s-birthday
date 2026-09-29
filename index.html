@@ -1,182 +1,755 @@
-import random
-import sys
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Mừng Sinh Nhật Trần Trung Hiếu ⚔️</title>
 
-# Danh sách bài tặng (đã chuẩn hóa tên thẻ bài chính thức)
-CARDS_POOL = [
-    "Ignis Phoenix, the Dracoslayer",
-    "Tiger Dragon",
-    "Otoshidamashi",
-    "Vision with Eyes of Blue",
-    "Doom Dozer",
-    "Amorphage Lechery",  # Tên tiếng Đức: Amorphage Unzucht
-    "Proxy Horse",
-    "D.D. Assault Carrier",
-    "Battlewasp - Pin the Bullseye",
-    "Heavenly Dragon Circle",
-    "Compulsory Evacuation Device",
-    "A.I. Meet You",
-    "Pharaonic Guardian Sphinx",
-    "Royal Straight",
-    "Tempest, Dragon Ruler of Storms",
-    "Doodlebook - Uh uh uh!",
-    "Yazi, Evil of the Yang Zing",
-    "Bloom Harmonist the Melodious Composer",
-    "Alien Shocktrooper M-Frame",
-    "Emblem of the Plunder Patroll",
-    "Victorica, Angel of Bravery",
-    "Contract with the Void",
-    "Borreload Savage Dragon",
-    "Patissciel Couverture",
-    "Immortal Dragon",
-    "Scareclaw Arrival",
-    "Runick Freezing Curses",
-    "Libromancer Geek Boy",
-    "S-Force Lapcewell",
-    "Celestial Wolf Lord, Blue Sirius",
-    "Reptilianne Echidna",
-    "Card of Fate",
-    "Number 60: Dugares the Timeless",
-    "Aluber the Jester of Despia",
-    "Odd-Eyes Rebellion Dragon Overlord",
-    "Geomathmech Final Sigma",
-    "Number 38: Hope Harbinger Dragon Titanic Galaxy",
-    "Vampire Takeover",
-    "Ra's Disciple",
-    "Stonehenge",
-    "Vanity's Ruler",
-    "Dark Ruler No More",
-    "Rite of Aramesir",
-    "Blue-Eyes Tyrant Dragon",
-    "Gagagashield",
-    "Rokket Tracer",
-]
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-class CardGiveawayManager:
+    body {
+      background: linear-gradient(180deg, rgba(8, 3, 18, 0.88) 0%, rgba(16, 7, 34, 0.92) 100%),
+                  url('bg.jpg'),
+                  radial-gradient(circle at 50% 30%, #301454 0%, #120626 65%, #06020c 100%);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px 16px 45px;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-    def __init__(self, cards):
-        self.available_cards = list(cards)
-        self.given_cards = []
+    /* Ma Đạo Trận xoay nền */
+    .magical-circle-bg {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 580px;
+      height: 580px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      opacity: 0.16;
+      z-index: 0;
+      animation: rotateCircle 60s linear infinite;
+    }
 
-    def show_remaining(self):
-        print(f"\n--- DANH SÁCH BÀI CÒN LẠI ({len(self.available_cards)}) ---")
-        if not self.available_cards:
-            print("Đã hết bài trong kho!")
-            return
-        for idx, card in enumerate(self.available_cards, 1):
-            print(f"{idx:2d}. {card}")
+    @keyframes rotateCircle {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
 
-    def draw_single(self, winner_name=""):
-        if not self.available_cards:
-            print("\n Kho bài đã hết, không thể bốc thăm tiếp!")
-            return
+    .bg-runes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(2px 2px at 30px 40px, #ffd700, transparent),
+                  radial-gradient(2px 2px at 150px 220px, #d4af37, transparent),
+                  radial-gradient(3px 3px at 290px 130px, #ffae00, transparent);
+      background-repeat: repeat;
+      background-size: 320px 320px;
+      opacity: 0.35;
+      animation: pulseGlow 4s infinite alternate;
+    }
 
-        chosen_card = random.choice(self.available_cards)
-        self.available_cards.remove(chosen_card)
-        self.given_cards.append((winner_name, chosen_card))
+    @keyframes pulseGlow {
+      0% { opacity: 0.2; }
+      100% { opacity: 0.45; }
+    }
 
-        target = f" cho [{winner_name}]" if winner_name else ""
-        print(f"\n CHÚC MỪNG{target} NHẬN ĐƯỢC:")
-        print(f" ->  {chosen_card} \n")
+    /* Nút BGM góc phải */
+    .music-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: rgba(22, 10, 38, 0.9);
+      border: 1.5px solid #ffd700;
+      color: #ffd700;
+      padding: 8px 14px;
+      border-radius: 99px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 50;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
 
-    def draw_multiple(self, count):
-        if count <= 0:
-            print("Số lượng phải lớn hơn 0.")
-            return
-        if count > len(self.available_cards):
-            print(
-                f"Chỉ còn {len(self.available_cards)} lá trong kho, không đủ rút {count} lá."
-            )
-            return
+    .music-toggle.playing {
+      background: #ffd700;
+      color: #2b124c;
+      box-shadow: 0 0 16px rgba(255, 215, 0, 0.8);
+    }
 
-        selected = random.sample(self.available_cards, count)
-        print(f"\n--- ĐÃ RÚT {count} LÁ NGẪU NHIÊN ---")
-        for idx, card in enumerate(selected, 1):
-            print(f"{idx}. {card}")
-            self.available_cards.remove(card)
-            self.given_cards.append(("Nhiều người/Gói", card))
+    .container {
+      max-width: 430px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      margin-top: 26px;
+    }
 
-    def distribute_to_people(self, names, cards_per_person=1):
-        total_needed = len(names) * cards_per_person
-        if total_needed > len(self.available_cards):
-            print(
-                f"Không đủ bài! Cần {total_needed} lá nhưng chỉ còn {len(self.available_cards)} lá."
-            )
-            return
+    .header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
 
-        random.shuffle(self.available_cards)
-        print(
-            f"\n--- KẾT QUẢ PHÂN PHÁT ({cards_per_person} LÁ / NGƯỜI) ---"
-        )
-        for name in names:
-            assigned = [
-                self.available_cards.pop() for _ in range(cards_per_person)
-            ]
-            for c in assigned:
-                self.given_cards.append((name, c))
-            cards_str = ", ".join(assigned)
-            print(f"• {name.strip()}: {cards_str}")
+    /* Con Mắt Ngàn Năm (Millennium Eye) */
+    .millennium-badge {
+      width: 95px;
+      height: 95px;
+      margin: 0 auto 12px;
+      background: radial-gradient(circle, #2d184a 30%, #150926 80%, #0c0417 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 215, 0, 0.4);
+      border: 2.5px solid #ffd700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: floatEye 4s ease-in-out infinite;
+    }
 
-    def show_history(self):
-        print(f"\n--- LỊCH SỬ ĐÃ TẶNG ({len(self.given_cards)}) ---")
-        if not self.given_cards:
-            print("Chưa có lá bài nào được bốc.")
-            return
-        for recipient, card in self.given_cards:
-            who = f"[{recipient}]" if recipient else "[Vô danh]"
-            print(f"• {who} -> {card}")
+    @keyframes floatEye {
+      0%, 100% { transform: translateY(0); filter: drop-shadow(0 0 12px rgba(255,215,0,0.5)); }
+      50% { transform: translateY(-7px); filter: drop-shadow(0 0 22px rgba(255,215,0,0.8)); }
+    }
 
+    .millennium-svg {
+      width: 70px;
+      height: 70px;
+    }
 
-def main():
-    manager = CardGiveawayManager(CARDS_POOL)
+    .player-tag {
+      display: inline-block;
+      background: rgba(255, 215, 0, 0.12);
+      border: 1px solid #ffd700;
+      color: #ffd700;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 99px;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+    }
 
-    menu = """
-========================================
-       YU-GI-OH! CARD GIVEAWAY TOOL
-========================================
-1. Bốc thăm 1 lá cho 1 người (Random Single)
-2. Bốc ngẫu nhiên số lượng N lá
-3. Chia bài ngẫu nhiên cho danh sách bạn bè
-4. Xem danh sách bài còn lại
-5. Xem lịch sử các lá đã tặng
-6. Thoát
-========================================
-Lựa chọn của bạn (1-6): """
+    .main-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.85rem;
+      font-weight: 900;
+      color: #ffd700;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.8),
+                   0 0 24px rgba(230, 126, 34, 0.7);
+      letter-spacing: 1px;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
 
-    while True:
-        choice = input(menu).strip()
-        if choice == "1":
-            name = input("Nhập tên người nhận (bỏ trống nếu không cần): ").strip()
-            manager.draw_single(name)
-        elif choice == "2":
-            try:
-                n = int(input("Nhập số lá cần bốc: ").strip())
-                manager.draw_multiple(n)
-            except ValueError:
-                print("Vui lòng nhập số nguyên hợp lệ.")
-        elif choice == "3":
-            names_input = input(
-                "Nhập danh sách tên người nhận (cách nhau bằng dấu phẩy): "
-            ).strip()
-            if names_input:
-                names = [n.strip() for n in names_input.split(",") if n.strip()]
-                try:
-                    c_per_p = int(
-                        input("Mỗi người nhận mấy lá (mặc định 1): ") or "1"
-                    )
-                    manager.distribute_to_people(names, c_per_p)
-                except ValueError:
-                    print("Số lượng không hợp lệ.")
-        elif choice == "4":
-            manager.show_remaining()
-        elif choice == "5":
-            manager.show_history()
-        elif choice == "6":
-            print("\nCảm ơn bạn đã sử dụng chương trình!")
-            sys.exit(0)
-        else:
-            print("Lựa chọn không hợp lệ, vui lòng chọn từ 1 đến 6.")
+    .sub-title {
+      font-size: 0.9rem;
+      color: #edd9ff;
+      line-height: 1.45;
+      padding: 0 6px;
+    }
 
+    .highlight-rule {
+      color: #ffd700;
+      font-weight: 700;
+    }
 
-if __name__ == "__main__":
-    main()
+    .card-box {
+      width: 100%;
+      background: rgba(24, 11, 41, 0.78);
+      border: 1.5px solid rgba(255, 215, 0, 0.35);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 22px;
+      padding: 22px 18px;
+      margin-bottom: 18px;
+      text-align: center;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card-box:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 215, 0, 0.7);
+    }
+
+    .box-icon {
+      font-size: 40px;
+      margin-bottom: 6px;
+    }
+
+    .box-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffeb99;
+      margin-bottom: 6px;
+    }
+
+    .box-desc {
+      font-size: 0.88rem;
+      color: #d6c6fa;
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 13px 0;
+      border: none;
+      border-radius: 99px;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-gold {
+      background: linear-gradient(90deg, #d4af37 0%, #ffd700 50%, #d4af37 100%);
+      color: #2e1c00;
+      box-shadow: 0 4px 18px rgba(255, 215, 0, 0.45);
+    }
+
+    .btn-spell {
+      background: linear-gradient(90deg, #10b981 0%, #06b6d4 50%, #3b82f6 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 18px rgba(6, 182, 212, 0.4);
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 0.84rem;
+      color: #bca6ea;
+      margin-top: 8px;
+      line-height: 1.45;
+      padding: 0 8px;
+    }
+
+    /* Modal hiển thị lật bài 3D */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(6, 2, 14, 0.94);
+      backdrop-filter: blur(14px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .ygo-modal {
+      background: #180d2b;
+      border: 2px solid #ffd700;
+      border-radius: 20px;
+      padding: 22px 18px;
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.35);
+      animation: popZoom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popZoom {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .card-flipper-container {
+      perspective: 1000px;
+      width: 175px;
+      height: 255px;
+      margin: 0 auto 12px;
+      cursor: pointer;
+    }
+
+    .card-flipper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .card-flipper.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      backface-visibility: hidden;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #ffea80;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.8);
+      background: #120721;
+    }
+
+    .card-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-face.front {
+      transform: rotateY(180deg);
+    }
+
+    .card-face.back {
+      transform: rotateY(0deg);
+    }
+
+    .flip-hint {
+      font-size: 0.8rem;
+      color: #ffd700;
+      margin-bottom: 8px;
+      animation: pulseText 1.5s infinite;
+    }
+
+    @keyframes pulseText {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .card-details {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease 0.4s;
+    }
+
+    .card-details.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .gift-badge {
+      display: inline-block;
+      background: #ef4444;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 99px;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .modal-card-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      color: #ffd700;
+      font-weight: 900;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .modal-card-type {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #bfa5ff;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .modal-card-desc {
+      font-size: 0.86rem;
+      color: #f1e9ff;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 10px;
+      padding: 10px 12px;
+      line-height: 1.45;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .modal-btn {
+      background: linear-gradient(90deg, #ffd700, #f59e0b);
+      color: #3b1e00;
+      border: none;
+      font-weight: 800;
+      padding: 10px 28px;
+      border-radius: 99px;
+      cursor: pointer;
+      font-size: 0.92rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ma Đạo Trận xoay nền -->
+  <svg class="magical-circle-bg" viewBox="0 0 200 200" fill="none" stroke="#ffd700" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="95" stroke-width="1.5"/>
+    <circle cx="100" cy="100" r="85" stroke-width="1"/>
+    <polygon points="100,5 182,147 18,147" stroke-width="1" fill="none"/>
+    <polygon points="100,195 18,53 182,53" stroke-width="1" fill="none"/>
+    <circle cx="100" cy="100" r="55" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <circle cx="100" cy="100" r="30" stroke-width="1"/>
+  </svg>
+
+  <div class="bg-runes"></div>
+
+  <!-- Nút Bật/Tắt Nhạc Nền -->
+  <button class="music-toggle" id="musicBtn" onclick="toggleBGM()">
+    <span id="musicIcon">🎵</span> <span id="musicText">Nhạc Trận Đấu</span>
+  </button>
+
+  <audio id="bgmAudio" loop preload="auto">
+    <source src="bgm.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="container">
+    <div class="header">
+      <!-- Con Mắt Ngàn Năm -->
+      <div class="millennium-badge">
+        <svg class="millennium-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fff6bd"/>
+              <stop offset="40%" stop-color="#ffd700"/>
+              <stop offset="100%" stop-color="#d49b14"/>
+            </linearGradient>
+          </defs>
+          <path d="M 18 30 Q 50 18 82 30" stroke="url(#gold)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+          <path d="M 15 48 Q 50 24 85 48" stroke="url(#gold)" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <path d="M 15 48 Q 50 72 85 48" stroke="url(#gold)" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <circle cx="50" cy="48" r="10" fill="url(#gold)"/>
+          <circle cx="50" cy="48" r="5" fill="#180b2b"/>
+          <path d="M 36 62 Q 22 76 34 83 Q 44 86 42 75 Q 40 68 35 68" stroke="url(#gold)" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <path d="M 64 62 L 64 86" stroke="url(#gold)" stroke-width="4.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <div class="player-tag">Duelist: Trần Trung Hiếu</div>
+      <h1 class="main-title">DRAW PHASE: SINH NHẬT!</h1>
+      <p class="sub-title">Trò Chơi Ngàn Năm đã điểm giờ. <span class="highlight-rule">Lá bài bạn rút được hôm nay chính là món quà thật</span> bạn sẽ nhận được ngoài đời!</p>
+    </div>
+
+    <!-- Hộp quà: Rút thẻ bài quà tặng -->
+    <div class="card-box">
+      <div class="box-icon">🎁</div>
+      <h2 class="box-title">Rút Thẻ Bài Quà Tặng</h2>
+      <p class="box-desc">Kho bài có 46 lá bài độc nhất vô nhị. Đặt tay lên bộ bài và triệu hồi món quà sinh nhật của bạn!</p>
+      <button class="btn btn-gold" onclick="drawGiftCard()">
+        <span>⚡</span> DRAW! NHẬN QUÀ SINH NHẬT <span>⚔️</span>
+      </button>
+    </div>
+
+    <!-- Hộp bói vui: Ma Pháp / Bẫy -->
+    <div class="card-box">
+      <div class="box-icon">📜</div>
+      <h2 class="box-title">Gieo Quẻ Vận Mệnh</h2>
+      <p class="box-desc">Kích hoạt bài Phép/Bẫy xem tuổi mới bạn 'bón hành' cho đời hay 'ăn hành'!</p>
+      <button class="btn btn-spell" onclick="drawSpellTrap()">
+        <span>✨</span> KÍCH HOẠT HIỆU ỨNG <span>🔮</span>
+      </button>
+    </div>
+
+    <div class="footer">
+      Chúc Trần Trung Hiếu tuổi mới trăm trận trăm thắng, tay luôn rút được card đỉnh và niềm tin bất diệt! 🔥
+    </div>
+  </div>
+
+  <!-- Modal lật bài 3D -->
+  <div class="modal-overlay" id="cardModal">
+    <div class="ygo-modal">
+      <div class="flip-hint" id="flipHint">👉 Chạm vào lá bài để LẬT MẶT! 👈</div>
+
+      <div class="card-flipper-container" onclick="revealCard()">
+        <div class="card-flipper" id="cardFlipper">
+          <div class="card-face back">
+            <img src="https://images.ygoprodeck.com/images/cards/back.jpg" alt="Mặt úp Yu-Gi-Oh">
+          </div>
+          <div class="card-face front">
+            <img id="cardImage" src="" alt="Lá bài hiển thị">
+          </div>
+        </div>
+      </div>
+
+      <div class="card-details" id="cardDetails">
+        <div class="gift-badge" id="giftBadge" style="display: none;">🎁 QUÀ SINH NHẬT CỦA HIẾU 🎁</div>
+        <h3 class="modal-card-name" id="cardName">Tên Lá Bài</h3>
+        <div class="modal-card-type" id="cardType">[ Loại Lá Bài ]</div>
+        <div class="modal-card-desc" id="cardEffect">Hiệu ứng lá bài</div>
+        <button class="modal-btn" onclick="closeModal()">Chốt Nhận Thẻ Này 👌</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ============================================================
+       DANH SÁCH 46 LÁ BÀI QUÀ TẶNG (Đã tích hợp ảnh HD từ cơ sở dữ liệu)
+       ============================================================ */
+    const birthdayGiftCards = [
+      { name: "Ignis Phoenix, the Dracoslayer", id: "94784213", type: "[ Pendulum / Effect Monster ]" },
+      { name: "Tiger Dragon", id: "58820853", type: "[ Dragon / Effect Monster ]" },
+      { name: "Otoshidamashi", id: "86455339", type: "[ Beast / Synchro / Tuner Monster ]" },
+      { name: "Vision with Eyes of Blue", id: "55410871", type: "[ Spellcaster / Effect Monster ]" },
+      { name: "Doom Dozer", id: "3773197", type: "[ Insect / Effect Monster ]" },
+      { name: "Amorphage Lechery (Unzucht)", id: "59389581", type: "[ Dragon / Pendulum / Effect ]" },
+      { name: "Proxy Horse", id: "74997493", type: "[ Cyberse / Effect Monster ]" },
+      { name: "D.D. Assault Carrier", id: "15308295", type: "[ Machine / Effect Monster ]" },
+      { name: "Battlewasp - Pin the Bullseye", id: "29552709", type: "[ Insect / Effect Monster ]" },
+      { name: "Heavenly Dragon Circle", id: "67364470", type: "[ Quick-Play Spell Card ]" },
+      { name: "Compulsory Evacuation Device", id: "94192409", type: "[ Normal Trap Card ]" },
+      { name: "A.I. Meet You", id: "35058588", type: "[ Normal Spell Card ]" },
+      { name: "Pharaonic Guardian Sphinx", id: "10403070", type: "[ Rock / Effect Monster ]" },
+      { name: "Royal Straight", id: "80630520", type: "[ Quick-Play Spell Card ]" },
+      { name: "Tempest, Dragon Ruler of Storms", id: "89399912", type: "[ Dragon / Effect Monster ]" },
+      { name: "Doodlebook - Uh uh uh!", id: "38783169", type: "[ Normal Trap Card ]" },
+      { name: "Yazi, Evil of the Yang Zing", id: "43959432", type: "[ Wyrm / Synchro / Effect ]" },
+      { name: "Bloom Harmonist the Melodious Composer", id: "15471265", type: "[ Fairy / Link / Effect ]" },
+      { name: "Alien Shocktrooper M-Frame", id: "75782277", type: "[ Reptile / Link / Effect ]" },
+      { name: "Emblem of the Plunder Patroll", id: "74640994", type: "[ Equip Spell Card ]" },
+      { name: "Victorica, Angel of Bravery", id: "85555787", type: "[ Fairy / Effect Monster ]" },
+      { name: "Contract with the Void", id: "69542024", type: "[ Normal Spell Card ]" },
+      { name: "Borreload Savage Dragon", id: "27548199", type: "[ Dragon / Synchro / Effect ]" },
+      { name: "Patissciel Couverture", id: "2470136", type: "[ Beast / Pendulum / Fusion ]" },
+      { name: "Immortal Dragon", id: "7922915", type: "[ Zombie / Synchro / Tuner ]" },
+      { name: "Scareclaw Arrival", id: "43892408", type: "[ Normal Spell Card ]" },
+      { name: "Runick Freezing Curses", id: "19891131", type: "[ Quick-Play Spell Card ]" },
+      { name: "Libromancer Geek Boy", id: "79777187", type: "[ Psychic / Effect Monster ]" },
+      { name: "S-Force Lapcewell", id: "92841002", type: "[ Cyberse / Effect Monster ]" },
+      { name: "Celestial Wolf Lord, Blue Sirius", id: "99426834", type: "[ Beast-Warrior / Synchro ]" },
+      { name: "Reptilianne Echidna", id: "25451652", type: "[ Reptile / Link / Effect ]" },
+      { name: "Card of Fate", id: "57421866", type: "[ Normal Spell Card ]" },
+      { name: "Number 60: Dugares the Timeless", id: "876330", type: "[ Fiend / Xyz / Effect ]" },
+      { name: "Aluber the Jester of Despia", id: "68468459", type: "[ Fairy / Effect Monster ]" },
+      { name: "Odd-Eyes Rebellion Dragon Overlord", id: "86238081", type: "[ Dragon / Xyz / Pendulum ]" },
+      { name: "Geomathmech Final Sigma", id: "42632209", type: "[ Cyberse / Synchro / Effect ]" },
+      { name: "Number 38: Hope Harbinger Dragon Titanic Galaxy", id: "63767246", type: "[ Dragon / Xyz / Effect ]" },
+      { name: "Vampire Takeover", id: "40450317", type: "[ Field Spell Card / Trap ]" },
+      { name: "Ra's Disciple", id: "42956963", type: "[ Fairy / Effect Monster ]" },
+      { name: "Stonehenge", id: "73001017", type: "[ Equip Spell Card ]" },
+      { name: "Vanity's Ruler", id: "72634965", type: "[ Fairy / Effect Monster ]" },
+      { name: "Dark Ruler No More", id: "54693926", type: "[ Normal Spell Card ]" },
+      { name: "Rite of Aramesir", id: "3285551", type: "[ Normal Spell Card ]" },
+      { name: "Blue-Eyes Tyrant Dragon", id: "71821243", type: "[ Dragon / Fusion / Effect ]" },
+      { name: "Gagagashield", id: "67675900", type: "[ Normal Trap Card ]" },
+      { name: "Rokket Tracer", id: "43202270", type: "[ Dragon / Tuner / Effect ]" }
+    ];
+
+    // Thẻ bói vui phụ
+    const spellTrapCards = [
+      {
+        name: "Pot of Greed (Hũ Tham Lam)",
+        id: "55144522",
+        type: "[ Spell Card ]",
+        effect: "Rút ngay 2 chầu ăn uống thả ga không lo về giá do bạn bè bao trọn gói!"
+      },
+      {
+        name: "Raigeki (Sấm Sét)",
+        id: "12580477",
+        type: "[ Spell Card ]",
+        effect: "Giáng sét đánh tan toàn bộ deadline và vận xui của Hiếu trong tuổi mới."
+      },
+      {
+        name: "Mirror Force (Gương Phản Chiếu)",
+        id: "44095762",
+        type: "[ Trap Card ]",
+        effect: "Bật lá chắn phản đòn: Mọi lời chê bai hay xui xẻo nhắm vào bạn sẽ tự động bật ngược lại 100%!"
+      },
+      {
+        name: "Monster Reborn (Hồi Sinh)",
+        id: "83764718",
+        type: "[ Spell Card ]",
+        effect: "Hồi phục tức thì năng lượng chiến đấu, thức khuya cày bài/cày game mà sáng dậy vẫn tỉnh bơ!"
+      }
+    ];
+
+    // Hệ thống Web Audio SFX và Synth BGM dự phòng
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playDrawSfx() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.2);
+    }
+
+    function playFlipSfx() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.25);
+      gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.35);
+    }
+
+    // Điều khiển Nhạc nền (Tự động phát synth hào hùng nếu file bgm.mp3 chưa tải lên)
+    const bgm = document.getElementById('bgmAudio');
+    const musicBtn = document.getElementById('musicBtn');
+    let isPlaying = false;
+    let synthInterval = null;
+
+    function playSynthBGM() {
+      const notes = [220, 247, 261, 293, 330, 392, 440, 523];
+      let step = 0;
+      synthInterval = setInterval(() => {
+        if (!isPlaying) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.value = notes[step % notes.length];
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.2);
+        step++;
+      }, 200);
+    }
+
+    function toggleBGM() {
+      if (!isPlaying) {
+        isPlaying = true;
+        musicBtn.classList.add('playing');
+        document.getElementById('musicText').innerText = "Đang Phát ⚔️";
+
+        bgm.play().catch(() => {
+          playSynthBGM();
+        });
+      } else {
+        isPlaying = false;
+        musicBtn.classList.remove('playing');
+        document.getElementById('musicText').innerText = "Nhạc Trận Đấu";
+        bgm.pause();
+        if (synthInterval) clearInterval(synthInterval);
+      }
+    }
+
+    let isCardFlipped = false;
+
+    function drawGiftCard() {
+      playDrawSfx();
+      const card = birthdayGiftCards[Math.floor(Math.random() * birthdayGiftCards.length)];
+      setupModalCard({
+        name: card.name,
+        type: card.type,
+        image: `https://images.ygoprodeck.com/images/cards/${card.id}.jpg`,
+        effect: `🎉 CHÚC MỪNG HIẾU ĐÃ RÚT TRÚNG LÁ BÀI NÀY!\n\nLá bài này sẽ được gửi trực tiếp đến tận tay bạn ngoài đời thực. Chuẩn bị gia nhập bộ bài chiến của Hiếu nhé!`
+      }, true);
+    }
+
+    function drawSpellTrap() {
+      playDrawSfx();
+      const card = spellTrapCards[Math.floor(Math.random() * spellTrapCards.length)];
+      setupModalCard({
+        name: card.name,
+        type: card.type,
+        image: `https://images.ygoprodeck.com/images/cards/${card.id}.jpg`,
+        effect: card.effect
+      }, false);
+    }
+
+    function setupModalCard(card, isGift) {
+      isCardFlipped = false;
+      const flipper = document.getElementById('cardFlipper');
+      const details = document.getElementById('cardDetails');
+      const hint = document.getElementById('flipHint');
+      const badge = document.getElementById('giftBadge');
+
+      flipper.classList.remove('flipped');
+      details.classList.remove('visible');
+      hint.style.display = 'block';
+      badge.style.display = isGift ? 'inline-block' : 'none';
+
+      document.getElementById('cardImage').src = card.image;
+      document.getElementById('cardName').innerText = card.name;
+      document.getElementById('cardType').innerText = card.type;
+      document.getElementById('cardEffect').innerText = card.effect;
+
+      document.getElementById('cardModal').style.display = 'flex';
+
+      setTimeout(() => {
+        if (!isCardFlipped) revealCard();
+      }, 650);
+    }
+
+    function revealCard() {
+      if (isCardFlipped) return;
+      isCardFlipped = true;
+      playFlipSfx();
+
+      document.getElementById('cardFlipper').classList.add('flipped');
+      document.getElementById('flipHint').style.display = 'none';
+      document.getElementById('cardDetails').classList.add('visible');
+
+      confetti({
+        particleCount: 110,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#ffd700', '#f59e0b', '#a855f7', '#06b6d4', '#ef4444']
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('cardModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
